@@ -1,23 +1,32 @@
 package com.lwq.mybatis.mapper;
 
 import com.lwq.mybatis.pojo.Blog;
-
+import com.lwq.mybatis.pojo.BlogExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 /**
- * @Interface BlogMapper
- * @Description 接口
- * @Author liu wq
- * @Date 2019/3/28 23:50
- * @Version 1.0
+ * @author liuwq
  */
 public interface BlogMapper {
+    long countByExample(BlogExample example);
 
-    /**
-     * 查询接口
-     * @param id
-     * @return
-     */
-    Blog selectBlog(Integer id);
+    int deleteByExample(BlogExample example);
 
-    Blog selectBlog2(Integer id);
+    int deleteByPrimaryKey(Integer id);
 
+    int insert(Blog record);
+
+    int insertSelective(Blog record);
+
+    List<Blog> selectByExample(BlogExample example);
+
+    Blog selectByPrimaryKey(Integer id);
+
+    int updateByExampleSelective(@Param("record") Blog record, @Param("example") BlogExample example);
+
+    int updateByExample(@Param("record") Blog record, @Param("example") BlogExample example);
+
+    int updateByPrimaryKeySelective(Blog record);
+
+    int updateByPrimaryKey(Blog record);
 }

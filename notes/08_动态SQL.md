@@ -22,10 +22,10 @@ mapper：
 
 ```java
 /**
-    * 动态SQL - if
-    * @param title
-    * @return
-    */
+* 动态SQL - if
+* @param title
+* @return
+*/
 List<Blog> selectActiveBlogByTitle(String title);
 ```
 
@@ -75,10 +75,10 @@ mapper：
 
 ```java
 /**
-    * 动态SQL - choose
-    * @param blog 实体类
-    * @return
-    */
+* 动态SQL - choose
+* @param blog 实体类
+* @return
+*/
 List<Blog> selectActiveBlogByTitleOrStyle(Blog blog);
 ```
 
@@ -105,21 +105,203 @@ public void selectActiveBlogByTitleOrStyleTest() {
 
 **需求：** 多条件查询，根据状态、标题、是否被推荐
 
-
 mapper：
 
 ```xml
-
+<!-- where -->
+<select id="selectActiveSqlByCondition" parameterType="Blog" resultMap="blogResultMap" >
+    select * from blog
+    <where>
+        <if test="state != null and state != ''" >
+            state = #{state}
+        </if>
+        <if test="title != null and title != ''">
+            and title like #{title}
+        </if>
+        <if test="featured != null">
+            and featured = #{featured}
+        </if>
+    </where>
+</select>
 ```
 
 接口：
 
 ```java
-
+/**
+* 动态SQL - where
+* @param blog 实体类
+* @return
+*/
+List<Blog> selectActiveSqlByCondition(Blog blog);
 ```
 
 测试：
 
 ```java
+@Test
+public void selectActiveSqlByConditionTest() {
+    SqlSession session = MybatisUtil.openSqlSession();
+    BlogActiveSql mapper = session.getMapper(BlogActiveSql.class);
 
+    Blog blog = new Blog();
+    blog.setState("NOT ACTIVE");
+    // blog.setTitle("%o%");
+
+    List<Blog> biogs = mapper.selectActiveSqlByCondition(blog);
+
+    session.close();
+    System.out.println(biogs);
+}
+```
+
+## set
+
+**需求：** 修改指定列，未指定的不修改
+
+mapper：
+
+```xml
+<!-- set -->
+<update id="updateBLogByCondition" parameterType="Blog" >
+    update blog
+    <set>
+        <if test="title != null">title = #{title},</if>
+        <!--<if test="authorId != null">author_id = #{authorId},</if>-->
+        <if test="state != null">state = #{state},</if>
+        <if test="featured != null">featured = #{featured},</if>
+        <if test="style != null">style = #{style}</if>
+    </set>
+    <where>
+        id = #{id}
+    </where>
+</update>
+```
+
+接口：
+
+```java
+/**
+* 动态SQL - set
+* @param blog
+* @return
+*/
+int updateBLogByCondition(Blog blog);
+```
+
+测试：
+
+```java
+@Test
+public void updateBLogByCondition() {
+    SqlSession session = MybatisUtil.openSqlSession();
+    BlogActiveSql mapper = session.getMapper(BlogActiveSql.class);
+
+    Blog blog = new Blog();
+    blog.setId(1);
+    blog.setTitle("水浒传");
+    int count = mapper.updateBLogByCondition(blog);
+
+    session.commit();
+    session.close();
+
+    System.out.println(count);
+}
+```
+
+## trim
+
+mapper：
+
+```xml
+<!-- trim -->
+<select id="selectActiveSqlByConditionTrim" parameterType="Blog" resultMap="blogResultMap">
+    select * from blog
+    <trim prefix="where" prefixOverrides="and | or">
+        <if test="state != null and state != ''">
+            state = #{state}
+        </if>
+        <if test="title != null and title != ''">
+            and title like #{title}
+        </if>
+        <if test="featured != null">
+            and featured = #{featured}
+        </if>
+    </trim>
+</select>
+```
+
+接口：
+
+```java
+/**
+* 动态SQL - trim
+* @param blog
+* @return
+*/
+List<Blog>  selectActiveSqlByConditionTrim(Blog blog);
+```
+
+测试：
+
+```java
+@Test
+public void selectActiveSqlByConditionTrimTest() {
+    SqlSession session = MybatisUtil.openSqlSession();
+    BlogActiveSql mapper = session.getMapper(BlogActiveSql.class);
+
+    Blog blog = new Blog();
+    blog.setState("NOT ACTIVE");
+    // blog.setTitle("%o%");
+
+    List<Blog> biogs = mapper.selectActiveSqlByConditionTrim(blog);
+
+    session.close();
+    System.out.println(biogs);
+}
+```
+
+## foreach
+
+**需求：** 实现批量删除
+
+mapper：
+
+```xml
+<!-- foreach -->
+<delete id="deleteActiveSqlByForeach" parameterType="list">
+    delete from blog where id in 
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</delete>
+```
+
+接口：
+
+```java
+/**
+* 动态SQL - foreach
+* @param ids id 集合
+* @return
+*/
+int deleteActiveSqlByForeach(List<Integer> ids);
+```
+
+测试：
+
+```java
+@Test
+public void deleteActiveSqlByForeachTest() {
+    SqlSession session = MybatisUtil.openSqlSession();
+    BlogActiveSql mapper = session.getMapper(BlogActiveSql.class);
+
+    List<Integer> ids = Arrays.asList(6, 7, 8);
+
+    int count = mapper.deleteActiveSqlByForeach(ids);
+
+    session.commit();
+    session.close();
+    System.out.println("删除了 " + count + " 条数据。");
+}
 ```

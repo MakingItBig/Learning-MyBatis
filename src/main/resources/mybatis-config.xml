@@ -28,9 +28,9 @@
 
     <!-- 定义映射文件 -->
     <mappers>
-        <mapper resource="com.lwq.mybatis.mapper/BlogMapper.xml" />
-        <!--<package name="com.lwq.mybatis.mapper"></package>-->
+        <!--<mapper resource="com/lwq/mybatis/mapper/BlogMapper.xml" />-->
+        <!--<mapper resource="com.lwq.mybatis.mapper/BlogActiveSql.xml" />-->
+        <package name="com.lwq.mybatis.mapper"></package>
     </mappers>
-
 
 </configuration>

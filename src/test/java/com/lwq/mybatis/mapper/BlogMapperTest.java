@@ -22,21 +22,7 @@ public class BlogMapperTest {
 
         BlogMapper mapper = session.getMapper(BlogMapper.class);
 
-        Blog blog = mapper.selectBlog(1);
-
-        session.close();
-
-        System.out.println(blog);
-    }
-
-
-    @Test
-    public void testSelectBlog2() {
-        SqlSession session = MybatisUtil.openSqlSession();
-
-        BlogMapper mapper = session.getMapper(BlogMapper.class);
-
-        Blog blog = mapper.selectBlog2(1);
+        Blog blog = mapper.selectByPrimaryKey(1);
 
         session.close();
 
@@ -47,7 +33,7 @@ public class BlogMapperTest {
      * 不使用接口的测试方法
      */
     @Test
-    public void testSeclectBlogNoInterface() {
+    public void testSelectBlogNoInterface() {
         SqlSession session = MybatisUtil.openSqlSession();
         try {
             Blog blog = (Blog) session.selectOne("com.lwq.mybatis.mapper.BlogMapper.selectBlog", 1);

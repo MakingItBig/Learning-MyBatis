@@ -1,23 +1,17 @@
 package com.lwq.mybatis.pojo;
 
-/**
- * @ClassName Blog
- * @Description pojo
- * @Author liu wq
- * @Date 2019/3/28 23:51
- * @Version 1.0
- */
 public class Blog {
     private Integer id;
-    private String title;
-    private int authorId;
-    private String state;
-    private Boolean featured;
-    private String style;
 
-    public Blog() {
-        super();
-    }
+    private String title;
+
+    private Integer authorId;
+
+    private String state;
+
+    private Byte featured;
+
+    private String style;
 
     public Integer getId() {
         return id;
@@ -32,14 +26,14 @@ public class Blog {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = title == null ? null : title.trim();
     }
 
-    public int getAuthorId() {
+    public Integer getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(int authorId) {
+    public void setAuthorId(Integer authorId) {
         this.authorId = authorId;
     }
 
@@ -48,14 +42,14 @@ public class Blog {
     }
 
     public void setState(String state) {
-        this.state = state;
+        this.state = state == null ? null : state.trim();
     }
 
-    public Boolean getFeatured() {
+    public Byte getFeatured() {
         return featured;
     }
 
-    public void setFeatured(Boolean featured) {
+    public void setFeatured(Byte featured) {
         this.featured = featured;
     }
 
@@ -64,18 +58,16 @@ public class Blog {
     }
 
     public void setStyle(String style) {
-        this.style = style;
+        this.style = style == null ? null : style.trim();
     }
 
     @Override
     public String toString() {
-        return "Blog{" +
-                "id=" + id +
+        return "\n" + "id=" + id +
                 ", title='" + title + '\'' +
                 ", authorId=" + authorId +
                 ", state='" + state + '\'' +
                 ", featured=" + featured +
-                ", style='" + style + '\'' +
-                '}';
+                ", style='" + style + '\'';
     }
 }
